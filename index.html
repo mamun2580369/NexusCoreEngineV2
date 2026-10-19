@@ -2,2479 +2,346 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CyberCore Target</title>
-
-    <!-- NATIVE BROWSER ALERT SHIELD -->
-    <script>
-        window.alert = function() { return true; };
-        window.confirm = function() { return true; };
-        window.prompt = function() { return null; };
-    </script>
-
-    <!-- Telegram WebApp SDK -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Core Engine V2</title>
+	
+    <!-- Telegram WebApp SDK (ক্রস বাটনে চাপ দিলে বের হওয়ার পারমিশন পপ-আপের জন্য) -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-    <!-- ==================== MONETAG SDK TAG START ==================== -->
-    <!-- আপনার Monetag ড্যাশবোর্ড থেকে প্রাপ্ত স্ক্রিপ্ট ট্যাগটি নিচের কমেন্টের জায়গায় বসিয়ে দিন -->
-    <script src='//libtl.com/sdk.js' data-zone='11733838' data-sdk='show_11733838'></script>
-    <!-- ===================== MONETAG SDK TAG END ===================== -->
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
+	
+    <script src='//libtl.com/sdk.js' data-zone='11529721' data-sdk='show_11529721'></script>
+	
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Montserrat:wght@300;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
+        :root {
+            --water-color: #00d2ff;
+            --water-deep: #3a7bd5;
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        body {
-            background-color: #030509;
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            height: 100vh;
-            height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #05070a; 
+            font-family: 'Montserrat', sans-serif; 
+            display: flex; align-items: center; justify-content: center; 
+            height: 100vh; color: white; overflow: hidden;
         }
 
-        /* Top Header Bar */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: max(10px, env(safe-area-inset-top)) clamp(12px, 4vw, 20px) 10px clamp(12px, 4vw, 20px);
-            background: #080c14;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            z-index: 100;
-            flex-shrink: 0;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 12px;
-            transition: background 0.2s ease;
-        }
-
-        .user-info:active { background: rgba(0, 240, 255, 0.1); }
-
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #00f0ff, #7000ff);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 15px;
-            border: 2px solid rgba(0, 240, 255, 0.4);
-            overflow: hidden;
-        }
-
-        .avatar img { width: 100%; height: 100%; object-fit: cover; }
-
-        .user-meta h4 {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
-            line-height: 1.1;
-        }
-
-        .badge-lvl {
-            background: rgba(0, 240, 255, 0.1);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 9px;
-            color: #00f0ff;
-            font-weight: 700;
-            display: inline-block;
-            margin-top: 2px;
-        }
-
-        .top-stats {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .stat-pill {
-            background: #0f1624;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 5px 10px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .stat-pill:active { transform: scale(0.95); }
-        .stat-pill.coins { color: #ffaa00; border-color: rgba(255, 170, 0, 0.3); }
-        .stat-pill.hearts { color: #ff2a55; border-color: rgba(255, 42, 85, 0.3); }
-
-        .btn-add-coins {
-            background: linear-gradient(135deg, #00f0ff, #0066ff);
-            color: #030712;
-            border: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            font-size: 12px;
-            font-weight: 900;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 2px;
-        }
-
-        /* View Layouts */
-        .view-content {
-            flex: 1;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 440px;
-            margin: 0 auto;
-        }
-
-        .view-content.active { display: flex; }
-
-        .scrollable-view {
-            padding: 16px 16px 90px 16px;
-            overflow-y: auto !important;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .scrollable-view::-webkit-scrollbar { width: 4px; }
-        .scrollable-view::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.2); border-radius: 4px; }
-
-        /* Home Dashboard Layout */
-        #view-home {
-            padding: clamp(6px, 1.5vh, 12px) 16px clamp(75px, 11vh, 85px) 16px;
-            justify-content: space-between;
-            overflow: hidden;
-            height: 100%;
-        }
-
-        .dash-card {
-            background: linear-gradient(180deg, #0e1526 0%, #070a12 100%);
-            border: 1px solid rgba(0, 240, 255, 0.25);
-            border-radius: 24px;
-            padding: clamp(14px, 2.5vh, 22px) 18px;
-            width: 100%;
+        .premium-container {
+            width: 90%; max-width: 400px;
+            padding: 45px 30px;
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 60px;
             text-align: center;
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 240, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(25px);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
             position: relative;
         }
 
-        .hero-hologram-wrap {
+        /* ক্লিন ও লাইট লিকুইড সার্কেল (ঢেউয়ের ভারী অ্যানিমেশন রিমুভড) */
+        .liquid-box {
             position: relative;
-            width: clamp(90px, 15vh, 115px);
-            height: clamp(90px, 15vh, 115px);
-            margin: 0 auto clamp(6px, 1vh, 10px) auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .holo-glow {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 35px;
+            background: #000;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 240, 255, 0.35) 0%, transparent 70%);
-            filter: blur(12px);
-            animation: pulseGlow 2.5s infinite ease-in-out;
+            border: 8px solid #111827;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.9), 0 0 30px rgba(0, 210, 255, 0.2);
+            overflow: hidden;
         }
 
-        .holo-ring {
+        .water {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 2px dashed rgba(0, 240, 255, 0.45);
-            animation: spinRing 15s linear infinite;
+            left: 0; bottom: 0;
+            width: 100%; height: 0%; /* লজিক দিয়ে কন্ট্রোল হবে */
+            background: linear-gradient(to top, var(--water-deep), var(--water-color));
+            transition: height 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+            box-shadow: 0 -5px 20px rgba(0, 210, 255, 0.8); /* গ্লোয়িং টপ বর্ডার */
         }
 
-        .holo-core-icon {
-            font-size: clamp(42px, 7vh, 52px);
-            filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.9));
-            position: relative;
-            z-index: 2;
+        .percent-text {
+            position: absolute;
+            width: 100%; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            font-size: 3.8rem; font-weight: 900;
+            letter-spacing: -2px;
+            color: #fff;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        @keyframes spinRing { 100% { transform: rotate(360deg); } }
-        @keyframes pulseGlow { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.15); opacity: 1; } }
+        /* লাইভ আইপি (বড় ও স্পট ভিউ) এবং লোকেশন এরিয়া */
+        .dev-branding {
+            margin-bottom: 30px;
+            padding: 5px;
+        }
 
-        .dash-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(19px, 3vh, 23px);
+        .ip-info {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.7rem; /* আইপি অনেক বড় এবং স্পষ্ট করা হয়েছে */
             font-weight: 900;
-            color: #ffffff;
-            letter-spacing: 0.5px;
-            margin-bottom: 2px;
-        }
-
-        .stats-row {
-            display: flex;
-            gap: 10px;
-            margin: clamp(10px, 1.8vh, 16px) 0;
-        }
-
-        .stat-card {
-            flex: 1;
-            background: #060912;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
-            padding: clamp(6px, 1.4vh, 10px) 8px;
-        }
-
-        .stat-card .val {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(15px, 2.3vh, 18px);
-            font-weight: 800;
-            color: #00f0ff;
-        }
-
-        .stat-card .lbl {
-            font-size: 10px;
-            color: #64748b;
+            background: linear-gradient(180deg, #FFFFFF 0%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-transform: uppercase;
-            font-weight: 600;
-            margin-top: 2px;
-        }
-
-        .btn-launch-game {
-            width: 100%;
-            padding: clamp(14px, 2.3vh, 18px);
-            border-radius: 14px;
-            background: linear-gradient(135deg, #00f0ff 0%, #0066ff 100%);
-            border: none;
-            color: #030712;
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(14px, 2.2vh, 16px);
-            font-weight: 900;
-            cursor: pointer;
+            letter-spacing: 1px;
+            filter: drop-shadow(0 2px 12px rgba(56, 189, 248, 0.6));
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            box-shadow: 0 10px 25px rgba(0, 102, 255, 0.45);
-            transition: transform 0.1s ease;
+            gap: 10px;
+            margin-bottom: 6px;
+            word-break: break-all;
         }
 
-        .btn-launch-game:active { transform: scale(0.97); }
+        #user-flag {
+            font-size: 1.6rem; /* ফ্ল্যাগ বড় করা হয়েছে */
+        }
 
-        /* Unified Bottom Action Cluster */
-        .home-action-cluster {
-            width: 100%;
+        .location-info {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* বিশাল সাইজের আল্ট্রা-ভিজিবল এরর পপ-আপ (Nexus Engine থেকে Button পর্যন্ত) */
+        .ad-error-popup {
+            position: absolute;
+            top: 55px;
+            bottom: 110px;
+            left: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, rgba(225, 29, 72, 0.98), rgba(159, 18, 57, 0.98));
+            border: 2px solid #ff4d4d;
+            border-radius: 40px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
-        .home-store-banner {
-            width: 100%;
-            background: linear-gradient(90deg, #111a2e 0%, #0b1120 100%);
-            border: 1px solid rgba(0, 240, 255, 0.25);
-            border-radius: 14px;
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            gap: 12px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-            transition: all 0.2s ease;
-        }
-
-        .home-store-banner:active { transform: scale(0.98); background: rgba(0, 240, 255, 0.12); }
-
-        @media (max-height: 680px) {
-            .home-store-banner { display: none !important; }
-        }
-
-        .home-bottom-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            width: 100%;
-            height: clamp(55px, 8.5vh, 65px);
-            flex-shrink: 0;
-        }
-
-        .quick-action-card {
-            background: rgba(14, 21, 35, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 10px 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            height: 100%;
-        }
-
-        .quick-action-card:active { transform: scale(0.96); }
-        .quick-action-card.vault-card { border-color: rgba(255, 170, 0, 0.4); background: rgba(255, 170, 0, 0.06); }
-        .quick-action-card.quests-card { border-color: rgba(0, 240, 255, 0.4); background: rgba(0, 240, 255, 0.06); }
-        .quick-action-card .icon { font-size: clamp(20px, 3vh, 24px); }
-        .quick-action-card .info h5 { font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700; color: #ffffff; }
-        .quick-action-card .info p { font-size: 10px; color: #8a99ad; }
-
-        /* ==================== MODALS ==================== */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(3, 5, 10, 0.96);
-            backdrop-filter: blur(15px);
-            z-index: 10000;
-            display: none;
             align-items: center;
             justify-content: center;
             padding: 20px;
-        }
-
-        .modal-card {
-            background: #090e18;
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 24px;
-            padding: 24px 20px;
-            width: 100%;
-            max-width: 340px;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-            margin: auto;
-            animation: modalPopIn 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        @keyframes modalPopIn {
-            from { transform: scale(0.85); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* ==================== QUANTUM VAULT ==================== */
-        #vault-modal {
-            position: fixed;
-            inset: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(4, 6, 12, 0.98);
-            backdrop-filter: blur(15px);
-            z-index: 10000;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: max(12px, env(safe-area-inset-top)) 16px max(12px, env(safe-area-inset-bottom)) 16px;
-            max-width: 440px;
-            margin: 0 auto;
-        }
-
-        .vault-modal-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-            width: 100%;
-            text-align: center;
-            position: relative;
-        }
-
-        /* Compact Success Pill */
-        #vault-success-badge {
-            margin: 0 auto 6px auto;
-            background: rgba(2, 32, 18, 0.96);
-            border: 1.5px solid #00ff9d;
-            box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
-            border-radius: 25px;
-            padding: 6px 16px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            z-index: 85;
-            pointer-events: none;
-            animation: modalPopIn 0.2s ease forwards;
-            white-space: nowrap;
-        }
-
-        #vault-success-badge .alert-icon {
-            font-size: 14px;
-            filter: drop-shadow(0 0 8px #00ff9d);
-        }
-
-        #vault-success-badge .success-text {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            color: #00ff9d;
-            font-weight: 900;
-            letter-spacing: 0.5px;
-        }
-
-        /* Error Overlay */
-        #vault-error-overlay {
-            position: absolute;
-            inset: 0;
-            margin: auto;
-            width: 94%;
-            max-width: 330px;
-            height: 270px;
-            background: rgba(26, 2, 8, 0.98);
-            border: 3px solid #ff2a55;
-            box-shadow: 0 0 60px rgba(255, 42, 85, 0.95), inset 0 0 35px rgba(255, 42, 85, 0.5);
-            border-radius: 24px;
-            padding: 25px 18px;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+            box-shadow: 0 0 60px rgba(225, 29, 72, 0.9), inset 0 0 25px rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.8);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 99;
-            pointer-events: none;
-            animation: modalPopIn 0.22s ease forwards;
-        }
-
-        #vault-error-overlay .alert-icon {
-            font-size: 52px;
-            filter: drop-shadow(0 0 20px #ff2a55);
-            margin-bottom: 6px;
-        }
-
-        #vault-error-overlay h3 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 19px;
-            color: #ff2a55;
-            font-weight: 900;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-            text-shadow: 0 0 15px rgba(255, 42, 85, 0.9);
-        }
-
-        #vault-error-overlay p {
-            font-size: 13px;
-            color: #ffffff;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            line-height: 1.3;
-        }
-
-        .circle-container {
-            position: relative;
-            width: min(85vw, 300px);
-            height: min(85vw, 300px);
-            margin: clamp(4px, 1vh, 10px) 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .circle-svg {
-            transform: rotate(-90deg);
-            width: 100%;
-            height: 100%;
-        }
-
-        .circle-bg { fill: none; stroke: #0d1422; stroke-width: 18; }
-        .circle-progress {
-            fill: none;
-            stroke: url(#coreGradient);
-            stroke-width: 18;
-            stroke-linecap: round;
-            stroke-dasharray: 848.23;
-            stroke-dashoffset: 848.23;
-            transition: stroke-dashoffset 0.6s ease;
-            filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.8));
-        }
-
-        .circle-inner {
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .core-percent {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(44px, 7.5vh, 58px);
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
-            line-height: 1;
-        }
-
-        .core-status {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 15px;
-            color: #00f0ff;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-top: 6px;
-        }
-
-        .core-limit-badge {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            padding: 5px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            color: #ffffff;
-            margin-top: 8px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-        }
-
-        .btn-charge {
-            width: 100%;
-            height: clamp(65px, 10vh, 78px);
-            border-radius: 18px;
-            background: linear-gradient(135deg, #00f0ff 0%, #0066ff 100%);
-            border: none;
-            color: #040814;
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(15px, 2.3vh, 18px);
-            font-weight: 900;
-            cursor: pointer;
-            box-shadow: 0 10px 35px rgba(0, 114, 255, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: transform 0.1s ease;
-            margin-top: auto;
-            flex-shrink: 0;
-        }
-
-        .btn-charge:active:not(:disabled) { transform: scale(0.97); }
-
-        .btn-charge:disabled {
-            background: #141c28;
-            color: #4b586e;
-            box-shadow: none;
-            cursor: not-allowed;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        /* Store Catalog */
-        .store-section {
-            width: 100%;
-            margin-bottom: 20px;
-            flex-shrink: 0;
-        }
-
-        .store-header {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            color: #00f0ff;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .store-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .store-card {
-            background: #0b101c;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 12px 10px;
+            pointer-events: none; /* বাটনে ক্লিকে কোনো ডিস্টার্ব করবে না */
+            user-select: none; /* লেখা কপি/সিলেক্ট রোধ করবে */
+            -webkit-user-select: none;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
         }
 
-        .store-card.equipped {
-            border-color: #00ff88;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        .ad-error-popup.show {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
         }
 
-        .store-item-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 13px;
-            font-weight: 700;
-            margin: 4px 0;
+        .popup-icon {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            animation: pulse-icon 0.8s infinite alternate;
         }
 
-        .store-item-price {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 11px;
-            color: #ffaa00;
-            margin-bottom: 6px;
-        }
-
-        .btn-buy {
-            width: 100%;
-            padding: 6px 10px;
-            border-radius: 8px;
-            background: #162238;
-            color: #00f0ff;
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        .btn-buy.equipped { background: #00ff88; color: #04140a; border: none; }
-
-        /* Quest Missions */
-        .quest-section-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 13px;
-            color: #00f0ff;
-            margin: 12px 0 8px 0;
-            width: 100%;
-            text-align: left;
-        }
-
-        .quest-card {
-            background: #0e1524;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
-            padding: 12px 14px;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            flex-shrink: 0;
-            transition: all 0.3s ease;
-        }
-
-        .quest-info h4 { font-size: 14px; font-weight: 700; color: #ffffff; }
-        .quest-info p { font-size: 11px; color: #ffaa00; font-family: 'Orbitron'; margin-top: 2px; }
-        .quest-progress-tag { font-size: 10px; color: #64748b; margin-top: 2px; }
-
-        .btn-quest {
-            background: #1b263b;
-            color: #ffaa00;
-            border: 1px solid rgba(255, 170, 0, 0.3);
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .btn-quest.ready {
-            background: #00ff88;
-            color: #04140a;
-            border: none;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
-        }
-
-        /* Profile Modal Elements */
-        .profile-avatar-large {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #00f0ff, #7000ff);
-            margin: 0 auto 8px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            border: 3px solid #00f0ff;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-            overflow: hidden;
-        }
-
-        .profile-avatar-large img { width: 100%; height: 100%; object-fit: cover; }
-
-        .rank-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 14px;
-            color: #00f0ff;
-            font-weight: 800;
-            margin: 4px 0 8px 0;
-        }
-
-        .level-bar-bg {
-            width: 100%;
-            height: 8px;
-            background: #141c2b;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 6px 0 4px 0;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .level-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00f0ff, #00ff88);
-            width: 0%;
-            border-radius: 10px;
-            transition: width 0.4s ease;
-        }
-
-        .level-roadmap-box {
-            background: #0d1422;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            padding: 10px;
-            margin: 12px 0;
-            text-align: left;
-        }
-
-        .roadmap-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            padding: 4px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .roadmap-item:last-child { border: none; }
-        .roadmap-item.active { color: #00ff88; }
-        .roadmap-item.next { color: #00f0ff; }
-
-        .avatar-selection-grid {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin: 12px 0;
-        }
-
-        .avatar-opt {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #101624;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .avatar-opt.active {
-            border-color: #00f0ff;
-            background: rgba(0, 240, 255, 0.2);
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
-        }
-
-        /* Game Arena */
-        #game-arena {
-            position: fixed;
-            inset: 0;
-            width: 100vw;
-            height: 100vh;
-            background: radial-gradient(circle at center, #0b1326 0%, #03050a 100%);
-            z-index: 9999;
-            display: none;
-            flex-direction: column;
-        }
-
-        .arena-hud {
-            position: absolute;
-            top: max(15px, env(safe-area-inset-top));
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        .hud-stage {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 16px;
-            color: #00f0ff;
+        .popup-title {
+            font-size: 1.3rem;
             font-weight: 900;
-            text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
-        }
-
-        .hud-score {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 16px;
-            color: #ffaa00;
-            font-weight: 800;
-        }
-
-        .btn-exit-game {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
             color: #ffffff;
-            padding: 6px 14px;
-            border-radius: 10px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            pointer-events: auto;
-            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.8);
+            margin-bottom: 8px;
         }
 
-        .knife-counter-label {
-            position: absolute;
-            bottom: 85px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 13px;
-            color: #00f0ff;
+        .popup-sub {
+            font-size: 0.8rem;
             font-weight: 800;
+            color: #ffe4e6;
             letter-spacing: 1px;
-            z-index: 10;
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
-            pointer-events: none;
+            text-transform: uppercase;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.6);
+            line-height: 1.4;
         }
 
-        #game-canvas { width: 100%; height: 100%; touch-action: none; }
-
-        /* Game Over */
-        .score-stack-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            margin: 12px 0 20px 0;
-            width: 100%;
-            max-width: 260px;
+        @keyframes pulse-icon {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.15); }
         }
 
-        .final-score-card {
-            background: #060912;
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 14px;
-            padding: 10px 18px;
-            width: 100%;
-        }
-
-        .final-score-card span { font-size: 10px; color: #64748b; text-transform: uppercase; }
-        .final-score-card h3 { font-family: 'Orbitron', sans-serif; font-size: 24px; color: #00f0ff; margin-top: 2px; }
-
-        .coins-earned-card {
-            background: rgba(255, 170, 0, 0.1);
-            border: 1px solid rgba(255, 170, 0, 0.4);
-            border-radius: 12px;
-            padding: 8px 14px;
-            width: 100%;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 13px;
-            color: #ffaa00;
-            font-weight: 800;
-        }
-
-        /* Bottom Nav */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 65px;
-            background: rgba(8, 12, 20, 0.96);
-            backdrop-filter: blur(15px);
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 1000;
-            flex-shrink: 0;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-            color: #52627a;
-            font-size: 11px;
-            font-weight: 700;
-            font-family: 'Rajdhani', sans-serif;
+        /* প্রিমিয়াম বাটন */
+        .sync-btn {
+            background: linear-gradient(145deg, #ffffff, #cbd5e1);
+            color: #020617;
+            border: none;
+            width: 100%; padding: 22px;
+            border-radius: 25px;
+            font-size: 1.1rem; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 1px;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 100;
         }
 
-        .nav-item.active { color: #00f0ff; }
-        .nav-icon { font-size: 18px; }
+        .sync-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 210, 255, 0.3);
+        }
+
+        .sync-btn:disabled {
+            background: #1e293b; color: #475569;
+            cursor: not-allowed; box-shadow: none;
+        }
+
+        #status-info {
+            margin-top: 20px; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 2px;
+            color: #334155;
+        }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-    <!-- Top Header -->
-    <div class="top-bar">
-        <div class="user-info" onclick="openProfileModal()">
-            <div class="avatar" id="user-avatar">🤖</div>
-            <div class="user-meta">
-                <h4 id="user-name">Player</h4>
-                <span class="badge-lvl" id="user-level-badge">⚡ LVL 1</span>
-            </div>
-        </div>
-        <div class="top-stats">
-            <div class="stat-pill coins">
-                🪙 <span id="top-coins-val">100</span>
-                <button class="btn-add-coins" onclick="openVaultModal()">+</button>
-            </div>
-            <div class="stat-pill hearts" id="top-hearts-pill" onclick="openStoreHearts()">
-                ❤️ <span id="top-hearts-val">5/5</span>
-            </div>
-        </div>
+<div class="premium-container" id="main-ui">
+    <div style="font-size: 9px; letter-spacing: 6px; color: #38bdf8; margin-bottom: 30px; font-weight: 900;">Nexus Core Engine V2</div>
+    
+    <div class="liquid-box">
+        <div class="water" id="water-fill"></div>
+        <div class="percent-text" id="ui-percent">0%</div>
     </div>
 
-    <!-- View 1: Home Dashboard -->
-    <div id="view-home" class="view-content active">
-        
-        <div class="dash-card">
-            <div class="hero-hologram-wrap">
-                <div class="holo-glow"></div>
-                <div class="holo-ring"></div>
-                <div class="holo-core-icon">🎯</div>
-            </div>
-
-            <h3 class="dash-title">CYBER KNIFE</h3>
-            
-            <div class="stats-row">
-                <div class="stat-card">
-                    <div class="val" id="dash-best-score">0</div>
-                    <div class="lbl">High Score</div>
-                </div>
-                <div class="stat-card">
-                    <div class="val" id="dash-skin-name" style="font-size: 13px;">CYAN BLADE</div>
-                    <div class="lbl">Active Weapon</div>
-                </div>
-            </div>
-
-            <button class="btn-launch-game" onclick="tryLaunchGame()">
-                <span>🗡️ PLAY GAME (-1 ❤️)</span>
-            </button>
+    <!-- বড় আকৃতির লাইভ আইপি, ফ্ল্যাগ এবং লোকেশন -->
+    <div class="dev-branding">
+        <div class="ip-info">
+            <span id="user-flag" style="-webkit-text-fill-color: initial;">🌐</span> 
+            <span id="user-ip">FETCHING...</span>
         </div>
-
-        <div class="home-action-cluster">
-            <div class="home-store-banner" onclick="switchTab('store')">
-                <span style="font-size: 22px;">🛍️</span>
-                <div>
-                    <h4 style="font-family: 'Rajdhani'; font-size: 14px; font-weight: 700; color: #ffffff;">Cyber Armory</h4>
-                    <p style="font-size: 10px; color: #00f0ff;">Equip blades, targets & stamina</p>
-                </div>
-                <span style="font-size: 14px; color: #00f0ff;">➔</span>
-            </div>
-
-            <div class="home-bottom-grid">
-                <div class="quick-action-card vault-card" onclick="openVaultModal()">
-                    <div class="icon">⚡</div>
-                    <div class="info">
-                        <h5>Free Vault</h5>
-                        <p style="color: #ffaa00;">+100 Coins Ad</p>
-                    </div>
-                </div>
-                <div class="quick-action-card quests-card" onclick="switchTab('quests')">
-                    <div class="icon">🏆</div>
-                    <div class="info">
-                        <h5>Missions</h5>
-                        <p style="color: #00f0ff;">Score Rewards</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <div class="location-info" id="user-location">LOCATING SYSTEM...</div>
     </div>
 
-    <!-- View 2: Store -->
-    <div id="view-store" class="view-content scrollable-view">
-        
-        <div class="store-section" id="store-hearts-section">
-            <div class="store-header">❤️ HEARTS & STAMINA PASS</div>
-            <div class="store-grid">
-                <div class="store-card">
-                    <div style="font-size: 22px;">❤️</div>
-                    <div class="store-item-title">+1 Single Heart</div>
-                    <div class="store-item-price">🪙 70 Coins</div>
-                    <button class="btn-buy" onclick="buySingleHeart(70)">BUY</button>
-                </div>
-                <div class="store-card">
-                    <div style="font-size: 22px;">💖</div>
-                    <div class="store-item-title">Full Refill (5/5)</div>
-                    <div class="store-item-price" id="pro-rated-price-lbl">🪙 Pro-Rated</div>
-                    <button class="btn-buy" onclick="buyDynamicFullRefill()">REFILL</button>
-                </div>
-                <div class="store-card">
-                    <div style="font-size: 22px;">⏳</div>
-                    <div class="store-item-title">1-Hour Unlimited</div>
-                    <div class="store-item-price">🪙 800 Coins</div>
-                    <button class="btn-buy" onclick="buyUnlimitedPass(1, 800)">ACTIVATE</button>
-                </div>
-                <div class="store-card">
-                    <div style="font-size: 22px;">⚡</div>
-                    <div class="store-item-title">12-Hour Unlimited</div>
-                    <div class="store-item-price">🪙 2500 Coins</div>
-                    <button class="btn-buy" onclick="buyUnlimitedPass(12, 2500)">ACTIVATE</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="store-section">
-            <div class="store-header">🗡️ BLADE ARSENAL</div>
-            <div class="store-grid">
-                <div class="store-card equipped" id="card-skin-cyan">
-                    <div style="font-size: 24px;">🗡️</div>
-                    <div class="store-item-title" style="color: #00f0ff;">Cyan Blade</div>
-                    <div class="store-item-price">DEFAULT</div>
-                    <button class="btn-buy equipped" id="btn-skin-cyan" onclick="equipSkin('cyan')">EQUIPPED</button>
-                </div>
-                <div class="store-card" id="card-skin-plasma">
-                    <div style="font-size: 24px;">🔥</div>
-                    <div class="store-item-title" style="color: #ffaa00;">Plasma Blade</div>
-                    <div class="store-item-price">🪙 500 Coins</div>
-                    <button class="btn-buy" id="btn-skin-plasma" onclick="buyOrEquipSkin('plasma', 500)">BUY</button>
-                </div>
-                <div class="store-card" id="card-skin-void">
-                    <div style="font-size: 24px;">⚡</div>
-                    <div class="store-item-title" style="color: #b026ff;">Void Blade</div>
-                    <div class="store-item-price">🪙 1000 Coins</div>
-                    <button class="btn-buy" id="btn-skin-void" onclick="buyOrEquipSkin('void', 1000)">BUY</button>
-                </div>
-                <div class="store-card" id="card-skin-katana">
-                    <div style="font-size: 24px;">✨</div>
-                    <div class="store-item-title" style="color: #ffd700;">Cyber Katana</div>
-                    <div class="store-item-price">🪙 2000 Coins</div>
-                    <button class="btn-buy" id="btn-skin-katana" onclick="buyOrEquipSkin('katana', 2000)">BUY</button>
-                </div>
-                <div class="store-card" id="card-skin-dragon">
-                    <div style="font-size: 24px;">🐉</div>
-                    <div class="store-item-title" style="color: #ff0055;">Dragon Dagger</div>
-                    <div class="store-item-price">🪙 3500 Coins</div>
-                    <button class="btn-buy" id="btn-skin-dragon" onclick="buyOrEquipSkin('dragon', 3500)">BUY</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="store-section">
-            <div class="store-header">🎯 CORE TARGET SKINS</div>
-            <div class="store-grid">
-                <div class="store-card equipped" id="card-board-neon">
-                    <div style="font-size: 24px;">🛡️</div>
-                    <div class="store-item-title" style="color: #00f0ff;">Neon Shield</div>
-                    <div class="store-item-price">DEFAULT</div>
-                    <button class="btn-buy equipped" id="btn-board-neon" onclick="equipBoard('neon')">EQUIPPED</button>
-                </div>
-                <div class="store-card" id="card-board-quantum">
-                    <div style="font-size: 24px;">⚙️</div>
-                    <div class="store-item-title" style="color: #00ff88;">Quantum Gear</div>
-                    <div class="store-item-price">🪙 800 Coins</div>
-                    <button class="btn-buy" id="btn-board-quantum" onclick="buyOrEquipBoard('quantum', 800)">BUY</button>
-                </div>
-                <div class="store-card" id="card-board-vortex">
-                    <div style="font-size: 24px;">🌀</div>
-                    <div class="store-item-title" style="color: #b026ff;">Dark Vortex</div>
-                    <div class="store-item-price">🪙 1500 Coins</div>
-                    <button class="btn-buy" id="btn-board-vortex" onclick="buyOrEquipBoard('vortex', 1500)">BUY</button>
-                </div>
-                <div class="store-card" id="card-board-solaris">
-                    <div style="font-size: 24px;">☀️</div>
-                    <div class="store-item-title" style="color: #ffd700;">Solaris Core</div>
-                    <div class="store-item-price">🪙 3000 Coins</div>
-                    <button class="btn-buy" id="btn-board-solaris" onclick="buyOrEquipBoard('solaris', 3000)">BUY</button>
-                </div>
-            </div>
-        </div>
-
+    <!-- বিশাল নোটিফিকেশন পপ-আপ কার্ড -->
+    <div id="ad-error-popup" class="ad-error-popup">
+        <div class="popup-icon">⚠️</div>
+        <div class="popup-title">AD LOAD FAILED</div>
+        <div class="popup-sub" id="popup-sub-text">NETWORK ERROR OR AD REFUSED</div>
     </div>
 
-    <!-- View 3: Quests -->
-    <div id="view-quests" class="view-content scrollable-view">
-        
-        <!-- Permanent Daily Login Bonus Quest -->
-        <div class="quest-section-title">DAILY PILOT REWARDS</div>
-        <div class="quest-card" id="q-card-daily-login">
-            <div class="quest-info">
-                <h4>🎁 Daily Login Bonus</h4>
-                <p>+200 Coins</p>
-                <div class="quest-progress-tag" id="q-prog-daily-login">Free daily pilot reward</div>
-            </div>
-            <button class="btn-quest ready" id="quest-btn-daily-login" onclick="claimDailyLoginBonus()">CLAIM</button>
-        </div>
-
-        <div class="quest-section-title">COMMUNITY MISSIONS</div>
-        <div class="quest-card" id="q-card-channel">
-            <div class="quest-info">
-                <h4>Join Official Channel</h4>
-                <p>+500 Coins</p>
-            </div>
-            <button class="btn-quest ready" onclick="claimDismissQuest('channel', 500, 'q-card-channel')">CLAIM</button>
-        </div>
-
-        <div class="quest-section-title">LEVEL CONQUEST (1 - 100)</div>
-        
-        <div class="quest-card" id="q-card-lvl2">
-            <div class="quest-info">
-                <h4>Reach Level 2</h4>
-                <p>+150 Coins</p>
-                <div class="quest-progress-tag" id="q-prog-lvl2">Target: LVL 2</div>
-            </div>
-            <button class="btn-quest" id="quest-btn-lvl2" onclick="claimDismissLevelQuest(2, 150, 'lvl2', 'q-card-lvl2')">LOCKED</button>
-        </div>
-
-        <div class="quest-card" id="q-card-lvl5">
-            <div class="quest-info">
-                <h4>Reach Level 5</h4>
-                <p>+350 Coins</p>
-                <div class="quest-progress-tag" id="q-prog-lvl5">Target: LVL 5</div>
-            </div>
-            <button class="btn-quest" id="quest-btn-lvl5" onclick="claimDismissLevelQuest(5, 350, 'lvl5', 'q-card-lvl5')">LOCKED</button>
-        </div>
-
-        <div class="quest-card" id="q-card-lvl10">
-            <div class="quest-info">
-                <h4>Reach Level 10</h4>
-                <p>+800 Coins</p>
-                <div class="quest-progress-tag" id="q-prog-lvl10">Target: LVL 10</div>
-            </div>
-            <button class="btn-quest" id="quest-btn-lvl10" onclick="claimDismissLevelQuest(10, 800, 'lvl10', 'q-card-lvl10')">LOCKED</button>
-        </div>
-
-        <div class="quest-card" id="q-card-lvl25">
-            <div class="quest-info">
-                <h4>Reach Level 25</h4>
-                <p>+2000 Coins</p>
-                <div class="quest-progress-tag" id="q-prog-lvl25">Target: LVL 25</div>
-            </div>
-            <button class="btn-quest" id="quest-btn-lvl25" onclick="claimDismissLevelQuest(25, 2000, 'lvl25', 'q-card-lvl25')">LOCKED</button>
-        </div>
-
-        <div class="quest-card" id="q-card-lvl50">
-            <div class="quest-info">
-                <h4>Reach Level 50</h4>
-                <p>+5000 Coins</p>
-                <div class="quest-progress-tag" id="q-prog-lvl50">Target: LVL 50</div>
-            </div>
-            <button class="btn-quest" id="quest-btn-lvl50" onclick="claimDismissLevelQuest(50, 5000, 'lvl50', 'q-card-lvl50')">LOCKED</button>
-        </div>
-
-        <div class="quest-card" id="q-card-lvl100">
-            <div class="quest-info">
-                <h4>Reach Level 100 (Grand Master)</h4>
-                <p>+15000 Coins</p>
-                <div class="quest-progress-tag" id="q-prog-lvl100">Target: LVL 100</div>
-            </div>
-            <button class="btn-quest" id="quest-btn-lvl100" onclick="claimDismissLevelQuest(100, 15000, 'lvl100', 'q-card-lvl100')">LOCKED</button>
-        </div>
-
-        <div class="quest-section-title">SCORE MILESTONES</div>
-        
-        <div class="quest-card" id="q-card-score25">
-            <div class="quest-info">
-                <h4>Score 25 Points</h4>
-                <p>+100 Coins</p>
-                <div class="quest-progress-tag" id="q-prog-score25">Best: 0 / 25</div>
-            </div>
-            <button class="btn-quest" id="quest-btn-score25" onclick="claimDismissScoreQuest(25, 100, 'score25', 'q-card-score25')">LOCKED</button>
-        </div>
-
-        <div class="quest-card" id="q-card-score50">
-            <div class="quest-info">
-                <h4>Score 50 Points</h4>
-                <p>+250 Coins</p>
-                <div class="quest-progress-tag" id="q-prog-score50">Best: 0 / 50</div>
-            </div>
-            <button class="btn-quest" id="quest-btn-score50" onclick="claimDismissScoreQuest(50, 250, 'score50', 'q-card-score50')">LOCKED</button>
-        </div>
-
-        <div class="quest-card" id="q-card-score100">
-            <div class="quest-info">
-                <h4>Score 100 Points</h4>
-                <p>+600 Coins</p>
-                <div class="quest-progress-tag" id="q-prog-score100">Best: 0 / 100</div>
-            </div>
-            <button class="btn-quest" id="quest-btn-score100" onclick="claimDismissScoreQuest(100, 600, 'score100', 'q-card-score100')">LOCKED</button>
-        </div>
-
-        <div class="quest-card" id="q-card-score250">
-            <div class="quest-info">
-                <h4>Score 250 Points</h4>
-                <p>+1500 Coins</p>
-                <div class="quest-progress-tag" id="q-prog-score250">Best: 0 / 250</div>
-            </div>
-            <button class="btn-quest" id="quest-btn-score250" onclick="claimDismissScoreQuest(250, 1500, 'score250', 'q-card-score250')">LOCKED</button>
-        </div>
-
-    </div>
-
-    <!-- Quantum Vault Screen -->
-    <div id="vault-modal">
-        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
-            <h2 style="font-family: 'Orbitron'; font-size: 17px; color: #00f0ff;">⚡ QUANTUM VAULT</h2>
-            <button class="btn-exit-game" onclick="closeVaultModal()">✕ CLOSE</button>
-        </div>
-
-        <div class="vault-modal-content">
-            <!-- Compact Floating Success Pill -->
-            <div id="vault-success-badge">
-                <span class="alert-icon">⚡</span>
-                <span class="success-text">+100 CREDITS GRANTED!</span>
-            </div>
-
-            <!-- Error Overlay -->
-            <div id="vault-error-overlay">
-                <div class="alert-icon">⚠️</div>
-                <h3>AD NOT READY</h3>
-                <p>No video stream available right now.<br>Tap the button below to retry!</p>
-            </div>
-
-            <div class="circle-container">
-                <svg class="circle-svg" viewBox="0 0 320 320">
-                    <defs>
-                        <linearGradient id="coreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#00f0ff" />
-                            <stop offset="100%" stop-color="#00ff88" />
-                        </linearGradient>
-                    </defs>
-                    <circle class="circle-bg" cx="160" cy="160" r="135"></circle>
-                    <circle id="core-circle-bar" class="circle-progress" cx="160" cy="160" r="135"></circle>
-                </svg>
-
-                <div class="circle-inner">
-                    <div class="core-percent" id="core-percent-text">0%</div>
-                    <div class="core-status" id="core-status-text">SYSTEM ONLINE</div>
-                    <div class="core-limit-badge" id="core-limit-text">0 / 100 DONE</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- BOTTOM DOCKED ACTION BUTTON -->
-        <button id="btn-charge-action" class="btn-charge" onclick="handleChargeRequest()">
-            <span>⚡ WATCH AD (+100 🪙)</span>
-        </button>
-    </div>
-
-    <!-- Out of Lives Modal -->
-    <div id="out-of-lives-modal" class="modal-overlay">
-        <div class="modal-card" style="border-color: #ff2a55; box-shadow: 0 20px 50px rgba(255, 42, 85, 0.5);">
-            <div style="font-size: 48px; filter: drop-shadow(0 0 15px #ff2a55); margin-bottom: 6px;">💔</div>
-            <h2 style="font-family: 'Orbitron'; font-size: 20px; color: #ff2a55; font-weight: 900; margin-bottom: 6px;">OUT OF LIVES!</h2>
-            <p style="font-size: 13px; color: #8a99ad; line-height: 1.4; margin-bottom: 18px;">You have 0 hearts left. Wait for auto-regen (5m) or refill instantly in the Armory!</p>
-            
-            <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
-                <button class="btn-launch-game" style="padding: 12px;" onclick="goToStoreFromLives()">🛍️ REFILL IN STORE</button>
-                <button class="btn-charge" style="height: 46px; font-size: 13px;" onclick="goToVaultFromLives()">⚡ FREE VAULT (+100 🪙)</button>
-                <button class="btn-exit-game" style="padding: 10px; margin-top: 4px;" onclick="closeLivesModal()">✕ CLOSE</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Exit Confirmation Modal -->
-    <div id="exit-confirm-modal" class="modal-overlay">
-        <div class="modal-card" style="border-color: #ffaa00; box-shadow: 0 20px 50px rgba(255, 170, 0, 0.4);">
-            <div style="font-size: 46px; filter: drop-shadow(0 0 15px #ffaa00); margin-bottom: 6px;">⚠️</div>
-            <h2 style="font-family: 'Orbitron'; font-size: 20px; color: #ffaa00; font-weight: 900; margin-bottom: 6px;">EXIT ARENA?</h2>
-            <p style="font-size: 13px; color: #8a99ad; line-height: 1.4; margin-bottom: 18px;">Are you sure you want to exit? Your high score will be saved, but the battle run will end.</p>
-            
-            <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
-                <button class="btn-launch-game" style="padding: 12px;" onclick="closeExitConfirmModal()">▶ RESUME GAME</button>
-                <button class="btn-exit-game" style="padding: 10px; background: rgba(255, 42, 85, 0.15); border-color: #ff2a55; color: #ff2a55;" onclick="confirmExitGameArena()">✕ CONFIRM EXIT</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Profile Modal -->
-    <div id="profile-modal" class="modal-overlay">
-        <div class="modal-card" style="max-height: 90vh; overflow-y: auto;">
-            <div class="profile-avatar-large" id="modal-avatar-display">🤖</div>
-            <h3 style="font-family: 'Rajdhani'; font-size: 20px; font-weight: 800;" id="modal-username">Player</h3>
-            <div class="rank-title" id="modal-rank-title">NOVICE STRIKER (LVL 1)</div>
-
-            <div style="text-align: left; margin: 10px 0;">
-                <div style="display: flex; justify-content: space-between; font-size: 11px; color: #8a99ad; font-family: 'Rajdhani'; font-weight: 700;">
-                    <span>CURRENT LEVEL PROGRESS</span>
-                    <span id="modal-level-coins-text">0 / 280 EXP</span>
-                </div>
-                <div class="level-bar-bg">
-                    <div class="level-bar-fill" id="modal-level-bar-fill"></div>
-                </div>
-            </div>
-
-            <div class="level-roadmap-box">
-                <div style="font-size: 10px; color: #64748b; font-family: 'Orbitron'; margin-bottom: 4px;">LEVEL ROADMAP (NEXT TIERS)</div>
-                <div id="modal-roadmap-container"></div>
-            </div>
-
-            <div style="font-size: 11px; color: #64748b; font-family: 'Orbitron'; margin-top: 6px;">SELECT AVATAR</div>
-            <div class="avatar-selection-grid">
-                <div class="avatar-opt" id="av-opt-none" onclick="selectAvatar('NONE')">🔄 TG</div>
-                <div class="avatar-opt active" id="av-opt-robot" onclick="selectAvatar('🤖')">🤖</div>
-                <div class="avatar-opt" id="av-opt-ninja" onclick="selectAvatar('🥷')">🥷</div>
-                <div class="avatar-opt" id="av-opt-demon" onclick="selectAvatar('👹')">👹</div>
-                <div class="avatar-opt" id="av-opt-crown" onclick="selectAvatar('👑')">👑</div>
-            </div>
-
-            <button class="btn-exit-game" style="width: 100%; padding: 10px; margin-top: 6px;" onclick="closeProfileModal()">✕ CLOSE</button>
-        </div>
-    </div>
-
-    <!-- Game Arena -->
-    <div id="game-arena">
-        <div class="arena-hud">
-            <div class="hud-stage" id="hud-stage">STAGE 1</div>
-            <div class="hud-score">SCORE: <span id="hud-score">0</span></div>
-            <button class="btn-exit-game" onclick="openExitConfirmModal()">✕ EXIT</button>
-        </div>
-
-        <div class="knife-counter-label" id="knife-counter-label">REMAINING: 7</div>
-
-        <canvas id="game-canvas"></canvas>
-
-        <div id="game-over-modal" class="modal-overlay">
-            <div class="modal-card" style="border-color: #ff2a55; box-shadow: 0 20px 50px rgba(255, 42, 85, 0.5);">
-                <h2 style="font-family: 'Orbitron'; font-size: 22px; color: #ff2a55; margin-bottom: 4px;">BLADE DEFLECTED</h2>
-                <p style="font-size: 12px; color: #8a99ad;">Knife collided with another blade!</p>
-
-                <div class="score-stack-box">
-                    <div class="final-score-card">
-                        <span>STAGE FINAL SCORE</span>
-                        <h3 id="final-score-val">0</h3>
-                    </div>
-                    <div class="coins-earned-card" id="coins-earned-val">
-                        🪙 +0 COINS COLLECTED
-                    </div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
-                    <button class="btn-launch-game" style="padding: 12px;" onclick="restartGame()">🔄 RETRY (-1 ❤️)</button>
-                    <button class="btn-exit-game" style="padding: 10px;" onclick="exitGameArena()">🏠 RETURN HOME</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
-            <span class="nav-icon">🏠</span>
-            <span>Home</span>
-        </div>
-        <div class="nav-item" id="nav-store" onclick="switchTab('store')">
-            <span class="nav-icon">🛍️</span>
-            <span>Store</span>
-        </div>
-        <div class="nav-item" id="nav-quests" onclick="switchTab('quests')">
-            <span class="nav-icon">🏆</span>
-            <span>Missions</span>
-        </div>
-    </div>
-
-    <script>
-        // ==========================================
-        // MONETAG CONFIGURATION
-        // নিচে আপনার Monetag Zone ID বসিয়ে দিন
-        // ==========================================
-        const MONETAG_ZONE_ID = "11733838";
-
-        const MAX_DAILY_LIMIT = 100;
-        const HARD_LOCK_SECONDS = 15;
-        const CIRCLE_CIRCUMFERENCE = 848.23;
-        const REGEN_TIME_MS = 5 * 60 * 1000;
-
-        // Player State
-        let coins = 100;
-        let lifetimeCoins = 0;
-        let hearts = 5;
-        const MAX_HEARTS = 5;
-        let infiniteStaminaUntil = 0;
-
-        let currentCount = 0;
-        let isLocked = false;
-        let bestScore = 0;
-
-        let selectedAvatar = 'NONE';
-        let equippedSkin = 'cyan';
-        let unlockedSkins = ['cyan'];
-        let equippedBoard = 'neon';
-        let unlockedBoards = ['neon'];
-        let claimedQuests = [];
-
-        const SKINS_CONFIG = {
-            cyan: { name: 'CYAN BLADE', glow: '#00f0ff', blade: '#00f0ff', hilt: '#7000ff' },
-            plasma: { name: 'PLASMA BLADE', glow: '#ffaa00', blade: '#ff5500', hilt: '#ffea00' },
-            void: { name: 'VOID BLADE', glow: '#b026ff', blade: '#b026ff', hilt: '#00f0ff' },
-            katana: { name: 'CYBER KATANA', glow: '#ffd700', blade: '#ffd700', hilt: '#ffffff' },
-            dragon: { name: 'DRAGON DAGGER', glow: '#ff0055', blade: '#ff0055', hilt: '#ffd700' }
-        };
-
-        const BOARDS_CONFIG = {
-            neon: { name: 'NEON SHIELD', rim: '#00f0ff', core: '#7000ff' },
-            quantum: { name: 'QUANTUM GEAR', rim: '#00ff88', core: '#0066ff' },
-            vortex: { name: 'DARK VORTEX', rim: '#b026ff', core: '#ff0055' },
-            solaris: { name: 'SOLARIS CORE', rim: '#ffd700', core: '#ff5500' }
-        };
-
-        // Telegram Native Setup
-        const tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
-        let realTelegramName = "Player";
-        let realTelegramPhoto = null;
-
-        if (tg) {
-            tg.ready();
-            if (tg.enableClosingConfirmation) {
-                tg.enableClosingConfirmation();
-            }
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                const u = tg.initDataUnsafe.user;
-                realTelegramName = u.first_name + (u.last_name ? ' ' + u.last_name : '');
-                if (u.photo_url) {
-                    realTelegramPhoto = u.photo_url;
-                }
-            }
-        }
-
-        function getExpForLevel(lvl) {
-            if (lvl <= 1) return 0;
-            return Math.floor(60 * Math.pow(lvl, 2) + 100 * lvl - 160);
-        }
-
-        function calculateLevelData(exp) {
-            let lvl = 1;
-            while (getExpForLevel(lvl + 1) <= exp) {
-                lvl++;
-            }
-            const currentLvlExp = getExpForLevel(lvl);
-            const nextLvlExp = getExpForLevel(lvl + 1);
-            const progress = Math.min(100, Math.max(0, ((exp - currentLvlExp) / (nextLvlExp - currentLvlExp)) * 100));
-
-            return {
-                level: lvl,
-                title: lvl >= 100 ? `GRAND MASTER (LVL ${lvl})` : lvl >= 50 ? `CYBER LEGEND (LVL ${lvl})` : lvl >= 25 ? `SHADOW MASTER (LVL ${lvl})` : lvl >= 10 ? `WARLORD (LVL ${lvl})` : lvl >= 5 ? `ASSASSIN (LVL ${lvl})` : `STRIKER (LVL ${lvl})`,
-                currentLvlExp: currentLvlExp,
-                nextLvlExp: nextLvlExp,
-                progress: progress
-            };
-        }
-
-        function getTodayDateString() {
-            const now = new Date();
-            return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
-        }
-
-        function loadSavedState() {
-            const today = getTodayDateString();
-            const savedDate = localStorage.getItem('cyber_core_date');
-            const savedCount = localStorage.getItem('cyber_core_count');
-            
-            coins = localStorage.getItem('cyber_coins') !== null ? parseInt(localStorage.getItem('cyber_coins')) : 100;
-            lifetimeCoins = localStorage.getItem('cyber_lifetime_coins') !== null ? parseInt(localStorage.getItem('cyber_lifetime_coins')) : 0;
-            hearts = localStorage.getItem('cyber_hearts') !== null ? parseInt(localStorage.getItem('cyber_hearts')) : 5;
-            infiniteStaminaUntil = parseInt(localStorage.getItem('cyber_infinite_stamina')) || 0;
-            bestScore = parseInt(localStorage.getItem('cyber_knife_best')) || 0;
-            selectedAvatar = localStorage.getItem('cyber_selected_avatar') || 'NONE';
-            
-            equippedSkin = localStorage.getItem('cyber_equipped_skin') || 'cyan';
-            unlockedSkins = JSON.parse(localStorage.getItem('cyber_unlocked_skins')) || ['cyan'];
-            equippedBoard = localStorage.getItem('cyber_equipped_board') || 'neon';
-            unlockedBoards = JSON.parse(localStorage.getItem('cyber_unlocked_boards')) || ['neon'];
-            claimedQuests = JSON.parse(localStorage.getItem('cyber_claimed_quests')) || [];
-
-            if (savedDate !== today) {
-                currentCount = 0;
-                localStorage.setItem('cyber_core_date', today);
-                localStorage.setItem('cyber_core_count', '0');
-            } else {
-                currentCount = parseInt(savedCount) || 0;
-                if (currentCount > MAX_DAILY_LIMIT) currentCount = MAX_DAILY_LIMIT;
-            }
-
-            updateHeartRegen();
-            updateUI();
-        }
-
-        function saveState() {
-            localStorage.setItem('cyber_core_date', getTodayDateString());
-            localStorage.setItem('cyber_core_count', currentCount.toString());
-            localStorage.setItem('cyber_coins', coins.toString());
-            localStorage.setItem('cyber_lifetime_coins', lifetimeCoins.toString());
-            localStorage.setItem('cyber_hearts', hearts.toString());
-            localStorage.setItem('cyber_infinite_stamina', infiniteStaminaUntil.toString());
-            localStorage.setItem('cyber_selected_avatar', selectedAvatar);
-            localStorage.setItem('cyber_equipped_skin', equippedSkin);
-            localStorage.setItem('cyber_unlocked_skins', JSON.stringify(unlockedSkins));
-            localStorage.setItem('cyber_equipped_board', equippedBoard);
-            localStorage.setItem('cyber_unlocked_boards', JSON.stringify(unlockedBoards));
-            localStorage.setItem('cyber_knife_best', bestScore.toString());
-            localStorage.setItem('cyber_claimed_quests', JSON.stringify(claimedQuests));
-        }
-
-        function isInfiniteStaminaActive() {
-            return Date.now() < infiniteStaminaUntil;
-        }
-
-        function updateHeartRegen() {
-            if (isInfiniteStaminaActive()) {
-                document.getElementById('top-hearts-val').innerText = '♾️ PASS';
-                return;
-            }
-
-            if (hearts >= MAX_HEARTS) {
-                document.getElementById('top-hearts-val').innerText = `${hearts}/${MAX_HEARTS}`;
-                localStorage.removeItem('cyber_next_regen');
-                return;
-            }
-
-            const now = Date.now();
-            let nextRegen = parseInt(localStorage.getItem('cyber_next_regen'));
-
-            if (!nextRegen || nextRegen < now) {
-                if (nextRegen) {
-                    const recovered = Math.floor((now - nextRegen) / REGEN_TIME_MS) + 1;
-                    hearts = Math.min(MAX_HEARTS, hearts + recovered);
-                    saveState();
-                }
-                nextRegen = now + REGEN_TIME_MS;
-                localStorage.setItem('cyber_next_regen', nextRegen.toString());
-            }
-
-            const diff = Math.max(0, Math.floor((nextRegen - now) / 1000));
-            const mins = Math.floor(diff / 60);
-            const secs = diff % 60;
-            const timeStr = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-
-            document.getElementById('top-hearts-val').innerText = `${hearts}/${MAX_HEARTS} (${timeStr})`;
-        }
-
-        setInterval(updateHeartRegen, 1000);
-
-        function updateUI() {
-            document.getElementById('top-coins-val').innerText = coins;
-            document.getElementById('dash-best-score').innerText = bestScore;
-            document.getElementById('dash-skin-name').innerText = SKINS_CONFIG[equippedSkin].name;
-            document.getElementById('user-name').innerText = realTelegramName;
-            document.getElementById('modal-username').innerText = realTelegramName;
-
-            const missing = Math.max(0, MAX_HEARTS - hearts);
-            const proCost = missing * 60;
-            const proLbl = document.getElementById('pro-rated-price-lbl');
-            if (proLbl) {
-                proLbl.innerText = missing > 0 ? `🪙 ${proCost} Coins` : `MAX HEARTS`;
-            }
-
-            const lvl = calculateLevelData(lifetimeCoins);
-            document.getElementById('user-level-badge').innerText = `⚡ LVL ${lvl.level}`;
-            document.getElementById('modal-rank-title').innerText = lvl.title;
-            document.getElementById('modal-level-coins-text').innerText = `${lifetimeCoins} / ${lvl.nextLvlExp} EXP`;
-            document.getElementById('modal-level-bar-fill').style.width = `${lvl.progress}%`;
-
-            const roadmapBox = document.getElementById('modal-roadmap-container');
-            if (roadmapBox) {
-                roadmapBox.innerHTML = `
-                    <div class="roadmap-item active"><span>★ LVL ${lvl.level} (Current)</span> <span>${lvl.currentLvlExp} EXP</span></div>
-                    <div class="roadmap-item next"><span>➔ LVL ${lvl.level + 1}</span> <span>${getExpForLevel(lvl.level + 1)} EXP</span></div>
-                    <div class="roadmap-item"><span>➔ LVL ${lvl.level + 2}</span> <span>${getExpForLevel(lvl.level + 2)} EXP</span></div>
-                `;
-            }
-
-            renderAvatarDisplay();
-
-            const percent = Math.min(Math.round((currentCount / MAX_DAILY_LIMIT) * 100), 100);
-            const offset = CIRCLE_CIRCUMFERENCE - (percent / 100) * CIRCLE_CIRCUMFERENCE;
-            document.getElementById('core-circle-bar').style.strokeDashoffset = offset;
-            document.getElementById('core-percent-text').innerText = `${percent}%`;
-            document.getElementById('core-limit-text').innerText = `${currentCount} / ${MAX_DAILY_LIMIT} DONE`;
-
-            const btn = document.getElementById('btn-charge-action');
-            if (currentCount >= MAX_DAILY_LIMIT) {
-                btn.disabled = true;
-                btn.innerHTML = `<span>🎉 DAILY CORE FULL</span>`;
-            } else if (!isLocked) {
-                btn.disabled = false;
-                btn.innerHTML = `<span>⚡ WATCH AD (+100 🪙)</span>`;
-            }
-
-            updateStoreUI();
-            updateQuestsUI();
-            updateDailyLoginQuestUI();
-        }
-
-        function renderAvatarDisplay() {
-            const topAv = document.getElementById('user-avatar');
-            const modAv = document.getElementById('modal-avatar-display');
-
-            if (selectedAvatar === 'NONE' && realTelegramPhoto) {
-                topAv.innerHTML = `<img src="${realTelegramPhoto}" alt="Avatar">`;
-                modAv.innerHTML = `<img src="${realTelegramPhoto}" alt="Avatar">`;
-            } else if (selectedAvatar === 'NONE') {
-                const initial = (realTelegramName && realTelegramName.length > 0) ? realTelegramName[0].toUpperCase() : 'P';
-                topAv.innerText = initial;
-                modAv.innerText = initial;
-            } else {
-                topAv.innerText = selectedAvatar;
-                modAv.innerText = selectedAvatar;
-            }
-
-            document.querySelectorAll('.avatar-opt').forEach(el => {
-                const isNone = el.id === 'av-opt-none' && selectedAvatar === 'NONE';
-                const isMatch = el.innerText.trim() === selectedAvatar;
-                el.classList.toggle('active', isNone || isMatch);
-            });
-        }
-
-        function updateStoreUI() {
-            Object.keys(SKINS_CONFIG).forEach(skinKey => {
-                const btn = document.getElementById(`btn-skin-${skinKey}`);
-                const card = document.getElementById(`card-skin-${skinKey}`);
-                if (!btn || !card) return;
-
-                if (equippedSkin === skinKey) {
-                    btn.innerText = "EQUIPPED";
-                    btn.className = "btn-buy equipped";
-                    card.className = "store-card equipped";
-                } else if (unlockedSkins.includes(skinKey)) {
-                    btn.innerText = "EQUIP";
-                    btn.className = "btn-buy";
-                    card.className = "store-card";
-                }
-            });
-
-            Object.keys(BOARDS_CONFIG).forEach(boardKey => {
-                const btn = document.getElementById(`btn-board-${boardKey}`);
-                const card = document.getElementById(`card-board-${boardKey}`);
-                if (!btn || !card) return;
-
-                if (equippedBoard === boardKey) {
-                    btn.innerText = "EQUIPPED";
-                    btn.className = "btn-buy equipped";
-                    card.className = "store-card equipped";
-                } else if (unlockedBoards.includes(boardKey)) {
-                    btn.innerText = "EQUIP";
-                    btn.className = "btn-buy";
-                    card.className = "store-card";
-                }
-            });
-        }
-
-        function updateDailyLoginQuestUI() {
-            const today = getTodayDateString();
-            const lastClaim = localStorage.getItem('cyber_daily_bonus_date');
-            const btn = document.getElementById('quest-btn-daily-login');
-            const prog = document.getElementById('q-prog-daily-login');
-            if (!btn) return;
-
-            if (lastClaim === today) {
-                btn.innerText = "CLAIMED";
-                btn.className = "btn-quest";
-                btn.style.opacity = "0.5";
-                btn.style.cursor = "not-allowed";
-                if (prog) prog.innerText = "Claimed today! Come back tomorrow";
-            } else {
-                btn.innerText = "CLAIM";
-                btn.className = "btn-quest ready";
-                btn.style.opacity = "1";
-                btn.style.cursor = "pointer";
-                if (prog) prog.innerText = "Ready to claim!";
-            }
-        }
-
-        function claimDailyLoginBonus() {
-            const today = getTodayDateString();
-            const lastClaim = localStorage.getItem('cyber_daily_bonus_date');
-            if (lastClaim === today) {
-                return;
-            }
-            coins += 200;
-            lifetimeCoins += 200;
-            localStorage.setItem('cyber_daily_bonus_date', today);
-            saveState();
-            updateUI();
-        }
-
-        function updateQuestsUI() {
-            const currentLvl = calculateLevelData(lifetimeCoins).level;
-
-            claimedQuests.forEach(key => {
-                const card = document.getElementById(`q-card-${key}`);
-                if (card) card.style.display = 'none';
-            });
-
-            setupLevelQuestBtn('quest-btn-lvl2', 'q-prog-lvl2', currentLvl, 2);
-            setupLevelQuestBtn('quest-btn-lvl5', 'q-prog-lvl5', currentLvl, 5);
-            setupLevelQuestBtn('quest-btn-lvl10', 'q-prog-lvl10', currentLvl, 10);
-            setupLevelQuestBtn('quest-btn-lvl25', 'q-prog-lvl25', currentLvl, 25);
-            setupLevelQuestBtn('quest-btn-lvl50', 'q-prog-lvl50', currentLvl, 50);
-            setupLevelQuestBtn('quest-btn-lvl100', 'q-prog-lvl100', currentLvl, 100);
-
-            setupScoreQuestBtn('quest-btn-score25', 'q-prog-score25', bestScore, 25);
-            setupScoreQuestBtn('quest-btn-score50', 'q-prog-score50', bestScore, 50);
-            setupScoreQuestBtn('quest-btn-score100', 'q-prog-score100', bestScore, 100);
-            setupScoreQuestBtn('quest-btn-score250', 'q-prog-score250', bestScore, 250);
-        }
-
-        function setupLevelQuestBtn(btnId, progId, currentLvl, targetLvl) {
-            const btn = document.getElementById(btnId);
-            const prog = document.getElementById(progId);
-            if (!btn) return;
-
-            if (prog) prog.innerText = `Current: LVL ${currentLvl} / ${targetLvl}`;
-
-            if (currentLvl >= targetLvl) {
-                btn.innerText = "CLAIM";
-                btn.className = "btn-quest ready";
-            } else {
-                btn.innerText = "LOCKED";
-                btn.className = "btn-quest";
-            }
-        }
-
-        function setupScoreQuestBtn(btnId, progId, current, target) {
-            const btn = document.getElementById(btnId);
-            const prog = document.getElementById(progId);
-            if (!btn) return;
-
-            if (prog) prog.innerText = `Best: ${current} / ${target}`;
-
-            if (current >= target) {
-                btn.innerText = "CLAIM";
-                btn.className = "btn-quest ready";
-            } else {
-                btn.innerText = "LOCKED";
-                btn.className = "btn-quest";
-            }
-        }
-
-        function claimDismissLevelQuest(targetLvl, reward, key, cardId) {
-            if (claimedQuests.includes(key)) return;
-            const currentLvl = calculateLevelData(lifetimeCoins).level;
-            if (currentLvl < targetLvl) return;
-
-            coins += reward;
-            lifetimeCoins += reward;
-            claimedQuests.push(key);
-            saveState();
-
-            const card = document.getElementById(cardId);
-            if (card) {
-                card.style.transform = 'scale(0.8)';
-                card.style.opacity = '0';
-                setTimeout(() => card.style.display = 'none', 300);
-            }
-
-            updateUI();
-        }
-
-        function claimDismissScoreQuest(targetScore, reward, key, cardId) {
-            if (claimedQuests.includes(key)) return;
-            if (bestScore < targetScore) return;
-
-            coins += reward;
-            lifetimeCoins += reward;
-            claimedQuests.push(key);
-            saveState();
-
-            const card = document.getElementById(cardId);
-            if (card) {
-                card.style.transform = 'scale(0.8)';
-                card.style.opacity = '0';
-                setTimeout(() => card.style.display = 'none', 300);
-            }
-
-            updateUI();
-        }
-
-        function claimDismissQuest(key, reward, cardId) {
-            if (claimedQuests.includes(key)) return;
-
-            coins += reward;
-            lifetimeCoins += reward;
-            claimedQuests.push(key);
-            saveState();
-
-            const card = document.getElementById(cardId);
-            if (card) {
-                card.style.transform = 'scale(0.8)';
-                card.style.opacity = '0';
-                setTimeout(() => card.style.display = 'none', 300);
-            }
-
-            updateUI();
-        }
-
-        function openProfileModal() { document.getElementById('profile-modal').style.display = 'flex'; }
-        function closeProfileModal() { document.getElementById('profile-modal').style.display = 'none'; }
-
-        function selectAvatar(val) {
-            selectedAvatar = val;
-            saveState();
-            renderAvatarDisplay();
-        }
-
-        function openStoreHearts() {
-            switchTab('store');
-            const heartsSec = document.getElementById('store-hearts-section');
-            if (heartsSec) heartsSec.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function notifyInsufficientCoins() {
-            setTimeout(() => openVaultModal(), 800);
-        }
-
-        function buySingleHeart(price) {
-            if (isInfiniteStaminaActive()) return;
-            if (hearts >= MAX_HEARTS) return;
-            if (coins < price) {
-                notifyInsufficientCoins();
-                return;
-            }
-            coins -= price;
-            hearts = Math.min(MAX_HEARTS, hearts + 1);
-            saveState();
-            updateUI();
-        }
-
-        function buyDynamicFullRefill() {
-            if (isInfiniteStaminaActive()) return;
-            const missing = MAX_HEARTS - hearts;
-            if (missing <= 0) return;
-            const cost = missing * 60;
-            if (coins < cost) {
-                notifyInsufficientCoins();
-                return;
-            }
-            coins -= cost;
-            hearts = MAX_HEARTS;
-            saveState();
-            updateUI();
-        }
-
-        function buyUnlimitedPass(hours, price) {
-            if (coins < price) {
-                notifyInsufficientCoins();
-                return;
-            }
-            coins -= price;
-            const durationMs = hours * 60 * 60 * 1000;
-            infiniteStaminaUntil = Math.max(Date.now(), infiniteStaminaUntil) + durationMs;
-            saveState();
-            updateUI();
-        }
-
-        function buyOrEquipSkin(skinKey, price) {
-            if (unlockedSkins.includes(skinKey)) {
-                equipSkin(skinKey);
-            } else {
-                if (coins < price) {
-                    notifyInsufficientCoins();
+    <button class="sync-btn" id="ui-btn" onclick="processStart()">Execute Sync</button>
+    <div id="status-info">System Secure</div>
+</div>
+
+<script>
+    // ০. টেলিগ্রাম এক্সিট কনফার্মেশন চালু করা (ক্রস বাটনে চাপ দিলে কনফার্মেশন চাইবে)
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.enableClosingConfirmation();
+    }
+
+    // ১. সিকিউরিটি (BD ব্লক) ও লাইভ IP, ফ্ল্যাগ ও লোকেশন ফেচিং
+    async function checkSecurityAndIP() {
+        try {
+            const res = await fetch('https://ipwho.is/');
+            const data = await res.json();
+
+            if (data && data.success) {
+                // BD সিকিউরিটি ব্লক
+                if (data.country_code === 'BD') {
+                    document.body.innerHTML = '<h1 style="color:red; font-family:Syncopate;">ACCESS DENIED</h1>';
                     return;
                 }
-                coins -= price;
-                unlockedSkins.push(skinKey);
-                equipSkin(skinKey);
-            }
-        }
 
-        function equipSkin(skinKey) { equippedSkin = skinKey; saveState(); updateUI(); }
+                // ফ্ল্যাগ ও IP বসানো
+                const flag = (data.flag && data.flag.emoji) ? data.flag.emoji : '🌐';
+                document.getElementById('user-flag').innerText = flag;
+                document.getElementById('user-ip').innerText = data.ip;
 
-        function buyOrEquipBoard(boardKey, price) {
-            if (unlockedBoards.includes(boardKey)) {
-                equipBoard(boardKey);
+                // শহর, অঞ্চল এবং দেশের নাম যুক্ত করা
+                const locParts = [data.city, data.region, data.country].filter(Boolean);
+                document.getElementById('user-location').innerText = locParts.join(', ');
             } else {
-                if (coins < price) {
-                    notifyInsufficientCoins();
-                    return;
-                }
-                coins -= price;
-                unlockedBoards.push(boardKey);
-                equipBoard(boardKey);
+                document.getElementById('user-ip').innerText = "127.0.0.1";
+                document.getElementById('user-location').innerText = "UNKNOWN LOCATION";
             }
+        } catch (e) {
+            document.getElementById('user-ip').innerText = "SECURE NETWORK";
+            document.getElementById('user-location').innerText = "ENCRYPTED LOCATION";
         }
+    }
+    checkSecurityAndIP();
 
-        function equipBoard(boardKey) { equippedBoard = boardKey; saveState(); updateUI(); }
+    // ২. ওয়াটার লজিক
+    let cyclePercent = parseInt(localStorage.getItem('savedPercent')) || 0;
+    const waterFill = document.getElementById('water-fill');
+    const percentEl = document.getElementById('ui-percent');
+    const btnEl = document.getElementById('ui-btn');
+    const statusEl = document.getElementById('status-info');
+    const popupEl = document.getElementById('ad-error-popup');
+    const popupSubText = document.getElementById('popup-sub-text');
+    let popupTimer = null;
 
-        function openVaultModal() { 
-            document.getElementById('vault-error-overlay').style.display = 'none';
-            document.getElementById('vault-success-badge').style.display = 'none';
-            document.getElementById('vault-modal').style.display = 'flex'; 
+    // পপ-আপ দেখানোর ফাংশন (৫ সেকেন্ড পর অটো রিমুভ)
+    function triggerAdError(msg) {
+        if (msg) popupSubText.innerText = msg;
+        popupEl.classList.add('show');
+
+        clearTimeout(popupTimer);
+        popupTimer = setTimeout(() => {
+            popupEl.classList.remove('show');
+        }, 5000);
+    }
+
+    function updateUI() {
+        if (cyclePercent > 100) cyclePercent = 100;
+        
+        // পানি নিচ থেকে উপরে উঠবে
+        waterFill.style.height = cyclePercent + "%";
+        percentEl.innerText = cyclePercent + "%";
+        localStorage.setItem('savedPercent', cyclePercent);
+
+        // ১০০% হলে বাটন স্থায়ী লক
+        if (cyclePercent >= 100) {
+            btnEl.disabled = true;
+            btnEl.innerText = "System Finalized";
+            statusEl.innerText = "Maximum Capacity Reached";
+            statusEl.style.color = "#38bdf8";
         }
+    }
 
-        function closeVaultModal() { document.getElementById('vault-modal').style.display = 'none'; }
+    function processStart() {
+        if (cyclePercent >= 100) return;
+        
+        btnEl.disabled = true;
+        statusEl.innerText = "Syncing with Core...";
 
-        function showVaultSuccessBadge() {
-            const b = document.getElementById('vault-success-badge');
-            if (b) {
-                b.style.display = 'inline-flex';
-                setTimeout(() => b.style.display = 'none', 2500);
+        setTimeout(() => {
+            if (cyclePercent < 100) {
+                btnEl.disabled = false;
+                statusEl.innerText = "System Secure";
             }
-        }
+        }, 10000);
 
-        function showVaultErrorOverlay() {
-            const ov = document.getElementById('vault-error-overlay');
-            if (ov) {
-                ov.style.display = 'flex';
-                setTimeout(() => ov.style.display = 'none', 3500);
-            }
-        }
-
-        function openLivesModal() { document.getElementById('out-of-lives-modal').style.display = 'flex'; }
-        function closeLivesModal() { document.getElementById('out-of-lives-modal').style.display = 'none'; }
-
-        function goToStoreFromLives() {
-            closeLivesModal();
-            openStoreHearts();
-        }
-
-        function goToVaultFromLives() {
-            closeLivesModal();
-            openVaultModal();
-        }
-
-        function openExitConfirmModal() {
-            document.getElementById('exit-confirm-modal').style.display = 'flex';
-        }
-
-        function closeExitConfirmModal() {
-            document.getElementById('exit-confirm-modal').style.display = 'none';
-        }
-
-        function confirmExitGameArena() {
-            closeExitConfirmModal();
-            exitGameArena();
-        }
-
-        // ================= MONETAG REWARDED AD ENGINE =================
-        function triggerMonetagAd() {
-            return new Promise((resolve, reject) => {
-                const zoneFunction = window['show_' + MONETAG_ZONE_ID];
-                
-                // 1. Check if Monetag Zone function exists (e.g. show_1234567())
-                if (typeof zoneFunction === 'function') {
-                    zoneFunction().then(() => {
-                        resolve(true);
-                    }).catch((err) => {
-                        reject(err);
-                    });
-                }
-                // 2. Fallback check for global show_rewarded if defined
-                else if (typeof window.show_rewarded === 'function') {
-                    window.show_rewarded().then(() => {
-                        resolve(true);
-                    }).catch((err) => {
-                        reject(err);
-                    });
-                }
-                // 3. Fallback for test / simulation environment
-                else {
-                    console.warn("Monetag script not detected yet. Testing mode active.");
-                    setTimeout(() => {
-                        resolve(true);
-                    }, 1200);
-                }
-            });
-        }
-
-        async function handleChargeRequest() {
-            if (isLocked || currentCount >= MAX_DAILY_LIMIT) return;
-
-            startHardLock();
-
-            try {
-                const watched = await triggerMonetagAd();
-                if (watched) {
-                    currentCount++;
-                    coins += 100;
-                    lifetimeCoins += 100;
-                    saveState();
-                    updateUI();
-                    showVaultSuccessBadge();
-                } else {
-                    showVaultErrorOverlay();
-                }
-            } catch (err) {
-                console.error("Monetag Ad Error:", err);
-                showVaultErrorOverlay();
-            }
-        }
-
-        function startHardLock() {
-            isLocked = true;
-            const btn = document.getElementById('btn-charge-action');
-            btn.disabled = true;
-            let remaining = HARD_LOCK_SECONDS;
-            btn.innerHTML = `<span>🔒 Syncing... (${remaining}s)</span>`;
-
-            const interval = setInterval(() => {
-                remaining--;
-                if (remaining > 0) {
-                    btn.innerHTML = `<span>🔒 Syncing... (${remaining}s)</span>`;
-                } else {
-                    clearInterval(interval);
-                    isLocked = false;
-                    updateUI();
-                }
-            }, 1000);
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-
-            const targetView = document.getElementById(`view-${tab}`);
-            const targetNav = document.getElementById(`nav-${tab}`);
-            if (targetView) targetView.classList.add('active');
-            if (targetNav) targetNav.classList.add('active');
-        }
-
-        function tryLaunchGame() {
-            if (!isInfiniteStaminaActive() && hearts <= 0) {
-                openLivesModal();
-                return;
-            }
-
-            if (!isInfiniteStaminaActive()) {
-                hearts--;
-                saveState();
-                updateHeartRegen();
+        if (typeof show_11529721 === 'function') {
+            show_11529721().then(() => {
+                cyclePercent++;
                 updateUI();
-            }
-
-            openGameArena();
+            }).catch(() => {
+                statusEl.innerText = "Connection Refused.";
+                triggerAdError("CONNECTION REFUSED OR AD BLOCKED");
+            });
+        } else {
+            statusEl.innerText = "Connection Refused.";
+            triggerAdError("AD SDK NOT LOADED PROPERLY");
         }
+    }
 
-        // ================= KNIFE HIT & TARGET ENGINE =================
-        const canvas = document.getElementById('game-canvas');
-        const ctx = canvas.getContext('2d');
-        let gameRunning = false;
-        let gameLoopId = null;
-
-        let stage = 1;
-        let score = 0;
-        let targetAngle = 0;
-        let targetSpeed = 0.012;
-        let targetRadius = 65;
-        let embeddedKnives = [];
-        let remainingKnives = 7;
-        let flyingKnife = null;
-        let particles = [];
-        let screenShake = 0;
-
-        let isShattering = false;
-        let shatterFragments = [];
-        let stageClearTextAlpha = 0;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        function openGameArena() {
-            document.getElementById('game-arena').style.display = 'flex';
-            resizeCanvas();
-            restartGame(false);
-        }
-
-        function exitGameArena() {
-            gameRunning = false;
-            if (gameLoopId) cancelAnimationFrame(gameLoopId);
-            document.getElementById('game-arena').style.display = 'none';
-        }
-
-        function restartGame(deduct = true) {
-            if (deduct && !isInfiniteStaminaActive()) {
-                if (hearts <= 0) {
-                    exitGameArena();
-                    openLivesModal();
-                    return;
-                }
-                hearts--;
-                saveState();
-                updateHeartRegen();
-                updateUI();
-            }
-            stage = 1;
-            score = 0;
-            startStage();
-        }
-
-        function startStage() {
-            document.getElementById('game-over-modal').style.display = 'none';
-            document.getElementById('hud-stage').innerText = `STAGE ${stage}`;
-            document.getElementById('hud-score').innerText = score;
-            
-            targetAngle = 0;
-            const baseSpeed = 0.012 + (stage - 1) * 0.0022;
-            const cappedSpeed = Math.min(baseSpeed, 0.035);
-            targetSpeed = cappedSpeed * (stage % 2 === 0 ? -1 : 1);
-
-            remainingKnives = 6 + Math.min(stage, 4);
-            embeddedKnives = [];
-            flyingKnife = null;
-            particles = [];
-            shatterFragments = [];
-            isShattering = false;
-            stageClearTextAlpha = 0;
-            screenShake = 0;
-
-            if (stage > 1) {
-                embeddedKnives.push(Math.PI);
-                if (stage > 4) embeddedKnives.push(Math.PI / 2);
-            }
-
-            document.getElementById('knife-counter-label').innerText = `REMAINING: ${remainingKnives}`;
-            gameRunning = true;
-            loop();
-        }
-
-        function triggerHaptic(type = 'medium') {
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred(type);
-        }
-
-        canvas.addEventListener('pointerdown', (e) => {
-            if (!gameRunning || isShattering || flyingKnife || remainingKnives <= 0) return;
-
-            flyingKnife = {
-                y: canvas.height - 120,
-                speed: 38
-            };
-            remainingKnives--;
-            document.getElementById('knife-counter-label').innerText = `REMAINING: ${remainingKnives}`;
-            triggerHaptic('light');
-        });
-
-        function drawCyberKnife(x, y, scale = 1, isGlow = true) {
-            const skin = SKINS_CONFIG[equippedSkin];
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.scale(scale, scale);
-
-            if (isGlow) {
-                ctx.shadowBlur = 14;
-                ctx.shadowColor = skin.glow;
-            }
-
-            ctx.fillStyle = skin.blade;
-            ctx.beginPath();
-            ctx.moveTo(0, -35);
-            ctx.lineTo(7, -5);
-            ctx.lineTo(-7, -5);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.moveTo(0, -30);
-            ctx.lineTo(2.5, -5);
-            ctx.lineTo(-2.5, -5);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = skin.hilt;
-            ctx.fillRect(-11, -5, 22, 5);
-
-            ctx.fillStyle = '#1e293b';
-            ctx.fillRect(-3.5, 0, 7, 20);
-
-            ctx.fillStyle = skin.glow;
-            ctx.beginPath();
-            ctx.arc(0, 23, 4, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.restore();
-        }
-
-        function createSparks(x, y, color, count = 22) {
-            for (let i = 0; i < count; i++) {
-                particles.push({
-                    x, y,
-                    vx: (Math.random() - 0.5) * 12,
-                    vy: (Math.random() - 0.5) * 12,
-                    radius: Math.random() * 3 + 1.5,
-                    color: color,
-                    alpha: 1
-                });
-            }
-        }
-
-        function gameOver() {
-            gameRunning = false;
-            cancelAnimationFrame(gameLoopId);
-            screenShake = 22;
-            triggerHaptic('heavy');
-
-            const earnedCoins = score * 5;
-            coins += earnedCoins;
-            lifetimeCoins += earnedCoins;
-
-            if (score > bestScore) bestScore = score;
-            saveState();
-            updateUI();
-
-            document.getElementById('final-score-val').innerText = `${score} PTS`;
-            document.getElementById('coins-earned-val').innerText = `🪙 +${earnedCoins} CREDITS EARNED`;
-            document.getElementById('game-over-modal').style.display = 'flex';
-        }
-
-        function stageComplete() {
-            isShattering = true;
-            screenShake = 20;
-            stageClearTextAlpha = 1;
-            triggerHaptic('heavy');
-
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height * 0.35;
-            const board = BOARDS_CONFIG[equippedBoard];
-
-            for (let i = 0; i < 35; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const dist = Math.random() * targetRadius;
-                const speed = Math.random() * 8 + 4;
-                shatterFragments.push({
-                    x: centerX + Math.cos(angle) * dist,
-                    y: centerY + Math.sin(angle) * dist,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    size: Math.random() * 12 + 6,
-                    color: i % 2 === 0 ? board.rim : board.core,
-                    rotation: Math.random() * Math.PI * 2,
-                    rotSpeed: (Math.random() - 0.5) * 0.3,
-                    alpha: 1
-                });
-            }
-
-            for (let i = 0; i < embeddedKnives.length; i++) {
-                const angle = embeddedKnives[i] + targetAngle;
-                const speed = Math.random() * 9 + 6;
-                shatterFragments.push({
-                    x: centerX + Math.cos(angle) * (targetRadius + 20),
-                    y: centerY + Math.sin(angle) * (targetRadius + 20),
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    size: 14,
-                    color: SKINS_CONFIG[equippedSkin].glow,
-                    rotation: angle,
-                    rotSpeed: (Math.random() - 0.5) * 0.4,
-                    alpha: 1
-                });
-            }
-
-            createSparks(centerX, centerY, '#00ff88', 50);
-
-            score += 10;
-            stage++;
-            saveState();
-
-            setTimeout(() => {
-                startStage();
-            }, 600);
-        }
-
-        function loop() {
-            if (!gameRunning) return;
-
-            ctx.save();
-            if (screenShake > 0) {
-                ctx.translate((Math.random() - 0.5) * screenShake, (Math.random() - 0.5) * screenShake);
-                screenShake *= 0.85;
-                if (screenShake < 0.5) screenShake = 0;
-            }
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height * 0.35;
-            const skin = SKINS_CONFIG[equippedSkin];
-            const board = BOARDS_CONFIG[equippedBoard];
-
-            targetAngle += targetSpeed;
-
-            // 1. Flying Knife
-            if (flyingKnife && !isShattering) {
-                flyingKnife.y -= flyingKnife.speed;
-                drawCyberKnife(centerX, flyingKnife.y, 1, true);
-
-                if (flyingKnife.y - 35 <= centerY + targetRadius) {
-                    const hitAngle = -targetAngle;
-                    const normalizedHit = (hitAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-
-                    let collided = false;
-                    for (let knifeAngle of embeddedKnives) {
-                        const norm = (knifeAngle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-                        let diff = Math.abs(normalizedHit - norm);
-                        if (diff > Math.PI) diff = Math.PI * 2 - diff;
-
-                        if (diff < 0.28) {
-                            collided = true;
-                            break;
-                        }
-                    }
-
-                    if (collided) {
-                        createSparks(centerX, centerY + targetRadius, '#ff2a55', 35);
-                        gameOver();
-                        ctx.restore();
-                        return;
-                    } else {
-                        embeddedKnives.push(normalizedHit);
-                        flyingKnife = null;
-                        score++;
-                        document.getElementById('hud-score').innerText = score;
-                        createSparks(centerX, centerY + targetRadius, skin.glow, 18);
-                        screenShake = 6;
-                        triggerHaptic('medium');
-
-                        if (remainingKnives <= 0) {
-                            stageComplete();
-                        }
-                    }
-                }
-            }
-
-            // 2. Target Shield
-            if (!isShattering) {
-                ctx.save();
-                ctx.translate(centerX, centerY);
-                ctx.rotate(targetAngle);
-
-                ctx.shadowBlur = 25;
-                ctx.shadowColor = board.rim;
-                ctx.fillStyle = '#0a101d';
-                ctx.strokeStyle = board.rim;
-                ctx.lineWidth = 6;
-                ctx.beginPath();
-                ctx.arc(0, 0, targetRadius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.stroke();
-
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(0, 0, targetRadius * 0.7, 0, Math.PI * 2);
-                ctx.stroke();
-
-                ctx.fillStyle = board.core;
-                ctx.beginPath();
-                ctx.arc(0, 0, 22, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.fillStyle = '#ffffff';
-                ctx.font = '900 18px Orbitron';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(stage, 0, 0);
-
-                for (let angle of embeddedKnives) {
-                    ctx.save();
-                    ctx.rotate(angle);
-                    ctx.translate(0, targetRadius + 18);
-                    drawCyberKnife(0, 0, 0.9, false);
-                    ctx.restore();
-                }
-                ctx.restore();
-            }
-
-            // 3. Shatter Shards
-            if (isShattering) {
-                for (let i = shatterFragments.length - 1; i >= 0; i--) {
-                    let f = shatterFragments[i];
-                    f.x += f.vx;
-                    f.y += f.vy;
-                    f.rotation += f.rotSpeed;
-                    f.alpha -= 0.025;
-
-                    if (f.alpha <= 0) {
-                        shatterFragments.splice(i, 1);
-                        continue;
-                    }
-
-                    ctx.save();
-                    ctx.globalAlpha = f.alpha;
-                    ctx.translate(f.x, f.y);
-                    ctx.rotate(f.rotation);
-                    ctx.fillStyle = f.color;
-                    ctx.shadowBlur = 10;
-                    ctx.shadowColor = f.color;
-                    ctx.fillRect(-f.size / 2, -f.size / 2, f.size, f.size);
-                    ctx.restore();
-                }
-
-                if (stageClearTextAlpha > 0) {
-                    ctx.save();
-                    ctx.font = '900 24px Orbitron';
-                    ctx.fillStyle = '#00ff9d';
-                    ctx.shadowBlur = 20;
-                    ctx.shadowColor = '#00ff9d';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('⚡ STAGE CLEARED! ⚡', centerX, centerY);
-                    ctx.restore();
-                }
-            }
-
-            // 4. Ready Knife at Bottom
-            if (!flyingKnife && remainingKnives > 0 && !isShattering) {
-                drawCyberKnife(centerX, canvas.height - 120, 1, true);
-            }
-
-            // 5. Remaining Knives Rack
-            if (!isShattering) {
-                const bottomY = canvas.height - 50;
-                const startX = centerX - (remainingKnives * 18) / 2;
-                for (let i = 0; i < remainingKnives; i++) {
-                    drawCyberKnife(startX + i * 18, bottomY, 0.4, false);
-                }
-            }
-
-            // 6. Particles
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.alpha -= 0.035;
-                if (p.alpha <= 0) {
-                    particles.splice(i, 1);
-                    continue;
-                }
-                ctx.save();
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = p.color;
-                ctx.shadowBlur = 8;
-                ctx.shadowColor = p.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-
-            ctx.restore();
-            gameLoopId = requestAnimationFrame(loop);
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            loadSavedState();
-        });
-    </script>
+    // প্রাথমিক লোড
+    updateUI();
+</script>
 </body>
 </html>
